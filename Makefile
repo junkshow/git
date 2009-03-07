@@ -225,6 +225,7 @@ ETC_GITCONFIG = etc/gitconfig
 endif
 lib = lib
 # DESTDIR=
+pathsep = :
 
 # default configuration for gitweb
 GITWEB_CONFIG = gitweb_config.perl
@@ -812,6 +813,7 @@ ifneq (,$(findstring CYGWIN,$(uname_S)))
 	UNRELIABLE_FSTAT = UnfortunatelyYes
 endif
 ifneq (,$(findstring MINGW,$(uname_S)))
+	pathsep = ;
 	NO_PREAD = YesPlease
 	NO_OPENSSL = YesPlease
 	NO_CURL = YesPlease
@@ -1267,7 +1269,7 @@ $(patsubst %.perl,%,$(SCRIPT_PERL)): % : %.perl
 	sed -e '1{' \
 	    -e '	s|#!.*perl|#!$(PERL_PATH_SQ)|' \
 	    -e '	h' \
-	    -e '	s=.*=use lib (split(/:/, $$ENV{GITPERLLIB} || "@@INSTLIBDIR@@"));=' \
+	    -e '	s=.*=use lib (split(/$(pathsep)/, $$ENV{GITPERLLIB} || "@@INSTLIBDIR@@"));=' \
 	    -e '	H' \
 	    -e '	x' \
 	    -e '}' \
